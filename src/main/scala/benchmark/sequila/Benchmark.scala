@@ -12,7 +12,7 @@ import scala.util.Try
 object Benchmark {
   private lazy val logger = LoggerFactory.getLogger(getClass)
 
-  def runBenchmark(database: DataFrame, query: DataFrame)(implicit spark: SparkSession): TimerResult[DataFrame] = Timer.timed {
+  def runBenchmark(database: DataFrame, query: DataFrame)(implicit spark: SparkSession): TimerResult[Long] = Timer.timed {
     SequilaSession(spark)
 
     database
@@ -28,11 +28,23 @@ object Benchmark {
     val joined = spark
       .sql("SELECT DISTINCT * FROM database JOIN query ON database.key = query.key AND database.to >= query.from AND database.from <= query.to")
 
-    joined.foreach(_ => ())
+    val aggregateUDF = F.udf((_: Long, _: Long, _: Long, _: Long) => 1)
+
+    val output = joined
+      .select(F.coalesce(F.sum(aggregateUDF(
+          F.col("database.from"),
+          F.col("database.to"),
+          F.col("query.from"),
+          F.col("query.to")
+        )), F.lit(0)).as("total_rows")
+      )
+      .collect()
+
+    val outputCount = output.head.getLong(0)
 
     Try(spark.catalog.dropTempView("database"))
     Try(spark.catalog.dropTempView("query"))
 
-    joined
+    outputCount
   }
 }

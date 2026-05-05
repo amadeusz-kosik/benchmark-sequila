@@ -26,9 +26,9 @@ object Main extends App {
     val resultWriter = new PrintWriter(outputCSVFilePath)
 
     if(! Files.exists(Path.of(outputCSVFilePath)))
-      resultWriter.write("test_suite_name,result_ms")
+      resultWriter.write("test_suite_name,result_ms,output_rows")
 
-    resultWriter.write(s"$testSuiteName,${result.milliseconds}")
+    resultWriter.write(s"$testSuiteName,${result.milliseconds},${result.result}")
     resultWriter.flush()
     resultWriter.close()
   }
