@@ -1,0 +1,42 @@
+val DefaultScalacOptions = Seq("-deprecation", "-unchecked", "-Xlint", "-Xdisable-assertions")
+
+// Sequila has support for Spark up to 3.4.3
+val SequilaVersion = "1.3.6"
+val SequilaSparkVersion = "3.4.1"
+val SequilaSparkTestingBaseVersion = f"${SequilaSparkVersion}_1.4.4"
+
+// Deduplication (assemblyMergeStrategy) for sbt-assembly
+val SparkJobAssemblyMergeStrategy: String => sbtassembly.MergeStrategy = {
+  // Do not erase log4j files
+  case "plugin.properties" | "log4j.properties" =>
+    MergeStrategy.concat
+
+  // Otherwise it will fail with "Failed to find the data source: parquet."
+  case PathList("META-INF", "services",  _*) =>
+    MergeStrategy.concat
+
+  case PathList("META-INF", xs @ _*) =>
+    MergeStrategy.discard
+
+  case x =>
+    MergeStrategy.first
+}
+
+
+lazy val root = (project in file("."))
+  .settings(name := "benchmark-sequila")
+
+
+ThisBuild / scalacOptions ++= DefaultScalacOptions
+ThisBuild / scalaVersion := "2.12.21"
+
+ThisBuild / Test / parallelExecution := false
+
+ThisBuild / assembly / assemblyJarName := "benchmark-sequila.jar"
+ThisBuild / assembly / mainClass := Some("benchmark.sequila.Main")
+ThisBuild / assembly / assemblyMergeStrategy := SparkJobAssemblyMergeStrategy
+
+ThisBuild / libraryDependencies += "org.biodatageeks"          %% "sequila"              % SequilaVersion
+ThisBuild / libraryDependencies += "org.apache.spark"          %% "spark-core"           % SequilaSparkVersion             % Provided
+ThisBuild / libraryDependencies += "org.apache.spark"          %% "spark-sql"            % SequilaSparkVersion             % Provided
+ThisBuild / libraryDependencies += "com.holdenkarau"           %% "spark-testing-base"   % SequilaSparkTestingBaseVersion  % Test
