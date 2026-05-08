@@ -1,16 +1,17 @@
-import benchmark.sequila.Benchmark
-import com.holdenkarau.spark.testing.DataFrameSuiteBase
+package benchmark.sequila
+
+import benchmark.sequila.utils.WithSparkSession
 import org.apache.spark.sql.SparkSession
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
 
-class CorrectnessTest extends AnyFunSpec with Matchers with DataFrameSuiteBase {
+class CorrectnessTest extends AnyFunSpec with Matchers with WithSparkSession {
 
     describe("Sequila benchmark") {
 
       it("should return empty list if no intervals overlap") {
-        implicit val sparkSession: SparkSession = spark
+        implicit val _sparkSession: SparkSession = sparkSession
 
         val database = TestDataGenerator.consecutive(100)
         val query    = TestDataGenerator.consecutive(100, 200)
@@ -22,7 +23,7 @@ class CorrectnessTest extends AnyFunSpec with Matchers with DataFrameSuiteBase {
       }
 
       it("should correctly map 1:1 relation") {
-        implicit val sparkSession: SparkSession = spark
+        implicit val _sparkSession: SparkSession = sparkSession
 
         val database = TestDataGenerator.consecutive(100)
         val query    = TestDataGenerator.consecutive(100)
@@ -34,7 +35,7 @@ class CorrectnessTest extends AnyFunSpec with Matchers with DataFrameSuiteBase {
       }
 
       it("should correctly map 1:all relation") {
-        implicit val sparkSession: SparkSession = spark
+        implicit val _sparkSession: SparkSession = sparkSession
 
         val database = TestDataGenerator.consecutive(1, 0, 100)
         val query    = TestDataGenerator.consecutive(100)
@@ -46,7 +47,7 @@ class CorrectnessTest extends AnyFunSpec with Matchers with DataFrameSuiteBase {
       }
 
       it("should correctly map all:1 relation") {
-        implicit val sparkSession: SparkSession = spark
+        implicit val _sparkSession: SparkSession = sparkSession
 
         val database = TestDataGenerator.consecutive(100)
         val query    = TestDataGenerator.consecutive(1, 0, 100)

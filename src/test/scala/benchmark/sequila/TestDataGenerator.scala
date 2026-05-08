@@ -1,5 +1,6 @@
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.{functions => F}
+package benchmark.sequila
+
+import org.apache.spark.sql.{DataFrame, SparkSession, functions => F}
 
 
 object TestDataGenerator {

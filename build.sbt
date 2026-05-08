@@ -1,9 +1,9 @@
 val DefaultScalacOptions = Seq("-deprecation", "-unchecked", "-Xlint", "-Xdisable-assertions")
 
-// Sequila has support for Spark up to 3.4.3
+val ScalaTestVersion = "3.2.20"
 val SequilaVersion = "1.3.6"
+// Sequila has support for Spark up to 3.4.3
 val SequilaSparkVersion = "3.4.1"
-val SequilaSparkTestingBaseVersion = f"${SequilaSparkVersion}_1.4.4"
 
 // Deduplication (assemblyMergeStrategy) for sbt-assembly
 val SparkJobAssemblyMergeStrategy: String => sbtassembly.MergeStrategy = {
@@ -36,7 +36,7 @@ ThisBuild / assembly / assemblyJarName := "benchmark-sequila.jar"
 ThisBuild / assembly / mainClass := Some("benchmark.sequila.Main")
 ThisBuild / assembly / assemblyMergeStrategy := SparkJobAssemblyMergeStrategy
 
-ThisBuild / libraryDependencies += "org.biodatageeks"          %% "sequila"              % SequilaVersion
-ThisBuild / libraryDependencies += "org.apache.spark"          %% "spark-core"           % SequilaSparkVersion             % Provided
-ThisBuild / libraryDependencies += "org.apache.spark"          %% "spark-sql"            % SequilaSparkVersion             % Provided
-ThisBuild / libraryDependencies += "com.holdenkarau"           %% "spark-testing-base"   % SequilaSparkTestingBaseVersion  % Test
+ThisBuild / libraryDependencies += "org.biodatageeks" %% "sequila"    % SequilaVersion
+ThisBuild / libraryDependencies += "org.apache.spark" %% "spark-sql"  % SequilaSparkVersion   % Provided
+ThisBuild / libraryDependencies += "org.scalatest"    %% "scalatest"  % ScalaTestVersion      % Test
+ThisBuild / libraryDependencies += "org.apache.spark" %% "spark-sql"  % SequilaSparkVersion   % Test
