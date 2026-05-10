@@ -4,13 +4,12 @@ import benchmark.sequila.Timer.TimerResult
 import org.apache.spark.sql.types.IntegerType
 import org.apache.spark.sql.{DataFrame, SequilaSession, SparkSession}
 import org.apache.spark.sql.{functions => F}
-import org.slf4j.LoggerFactory
+
 
 import scala.util.Try
 
 
 object Benchmark {
-  private lazy val logger = LoggerFactory.getLogger(getClass)
 
   def runBenchmark(database: DataFrame, query: DataFrame)(implicit spark: SparkSession): TimerResult[Long] = Timer.timed {
     SequilaSession(spark)
