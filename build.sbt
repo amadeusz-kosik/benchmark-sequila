@@ -36,7 +36,6 @@ ThisBuild / assembly / assemblyJarName := "benchmark-sequila.jar"
 ThisBuild / assembly / mainClass := Some("benchmark.sequila.Main")
 ThisBuild / assembly / assemblyMergeStrategy := SparkJobAssemblyMergeStrategy
 
-ThisBuild / libraryDependencies += "org.biodatageeks" %% "sequila"    % SequilaVersion
-ThisBuild / libraryDependencies += "org.apache.spark" %% "spark-sql"  % SequilaSparkVersion   % Provided
-ThisBuild / libraryDependencies += "org.scalatest"    %% "scalatest"  % ScalaTestVersion      % Test
-ThisBuild / libraryDependencies += "org.apache.spark" %% "spark-sql"  % SequilaSparkVersion   % Test
+ThisBuild / libraryDependencies += "org.biodatageeks" %% "sequila"                % SequilaVersion
+ThisBuild / libraryDependencies += "org.apache.spark" %% "spark-sql"              % SequilaSparkVersion
+ThisBuild / libraryDependencies += "me.kosik"         %% "library-spark-test-17"  % s"${SequilaSparkVersion}-1.0.2"   % Test

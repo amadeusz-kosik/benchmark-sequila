@@ -1,6 +1,6 @@
 package benchmark.sequila
 
-import benchmark.sequila.utils.WithSparkSession
+import me.kosik.library.spark.test.WithSparkSession
 import org.apache.spark.sql.SparkSession
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
