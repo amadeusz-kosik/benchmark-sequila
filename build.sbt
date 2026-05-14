@@ -24,7 +24,11 @@ val SparkJobAssemblyMergeStrategy: String => sbtassembly.MergeStrategy = {
 
 
 lazy val root = (project in file("."))
-  .settings(name := "benchmark-sequila")
+  .settings(
+    name := "benchmark-sequila",
+    organization := "me.kosik",
+    version := "1.0.0"
+  )
 
 
 ThisBuild / scalacOptions ++= DefaultScalacOptions
@@ -33,9 +37,50 @@ ThisBuild / scalaVersion := "2.12.21"
 ThisBuild / Test / parallelExecution := false
 
 ThisBuild / assembly / assemblyJarName := "benchmark-sequila.jar"
-ThisBuild / assembly / mainClass := Some("benchmark.sequila.Main")
 ThisBuild / assembly / assemblyMergeStrategy := SparkJobAssemblyMergeStrategy
 
 ThisBuild / libraryDependencies += "org.biodatageeks" %% "sequila"                % SequilaVersion
 ThisBuild / libraryDependencies += "org.apache.spark" %% "spark-sql"              % SequilaSparkVersion
 ThisBuild / libraryDependencies += "me.kosik"         %% "library-spark-test-17"  % s"${SequilaSparkVersion}-1.0.3"   % Test
+
+// sbt-docker configuration
+enablePlugins(DockerPlugin)
+
+docker / dockerfile := {
+  val jar = assembly.value
+
+  new Dockerfile {
+    from(s"spark:3.4.3-scala2.12-java11-r-ubuntu")
+
+    copy(jar, s"/app/benchmark-sequila.jar")
+
+    volume("/mnt/data")
+    volume("/mnt/events")
+
+    expose(4040)
+
+    entryPoint(
+      "/opt/spark/bin/spark-submit",
+      "--class", "benchmark.sequila.Main",
+      "--master", "spark://spark-master:7077",
+      s"/app/benchmark-sequila.jar"
+    )
+  }
+}
+
+docker / imageNames := Seq(
+  // Sets the latest tag
+  ImageName(
+    namespace = Some(organization.value),
+    repository = name.value,
+    tag = Some("latest")
+  ),
+
+  // Sets a name with a tag that contains the project version
+  ImageName(
+    namespace = Some(organization.value),
+    repository = name.value,
+    tag = Some(version.value)
+  )
+)
+
