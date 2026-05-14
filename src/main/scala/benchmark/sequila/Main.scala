@@ -11,25 +11,25 @@ object Main extends App {
   implicit private val spark: SparkSession =
     SparkSession.builder().appName("Sequila benchmark").getOrCreate()
 
-  private val Array(dataPathPrefix, testSuiteName, outputCSVFilePath) = args
+  private val InputDataPathPrefix = "/mnt/data/"
+  private val OutputCSVFilePath   = "/mnt/data/benchmark/sequila.csv"
 
-  private val result = {
-    val testSuite = TestDataSuites.findTestSuite(testSuiteName)(dataPathPrefix)
+  private val resultWriter = new PrintWriter(OutputCSVFilePath)
 
-    val database = spark.read.parquet(testSuite.databasePath)
-    val query = spark.read.parquet(testSuite.queryPath)
+  if(! Files.exists(Path.of(OutputCSVFilePath)))
+    resultWriter.write("test_suite_name,result_ms,output_rows")
 
-    Benchmark.runBenchmark(database, query)
-  }
+  TestDataSuites.values foreach { testDataSuiteMetadata =>
+    val result = {
+      val database = spark.read.parquet(InputDataPathPrefix + testDataSuiteMetadata.databasePath)
+      val query    = spark.read.parquet(InputDataPathPrefix + testDataSuiteMetadata.queryPath)
 
-  {
-    val resultWriter = new PrintWriter(outputCSVFilePath)
+      Benchmark.runBenchmark(database, query)
+    }
 
-    if(! Files.exists(Path.of(outputCSVFilePath)))
-      resultWriter.write("test_suite_name,result_ms,output_rows")
-
-    resultWriter.write(s"$testSuiteName,${result.milliseconds},${result.result}")
+    resultWriter.write(s"${testDataSuiteMetadata.name},${result.milliseconds},${result.result}")
     resultWriter.flush()
-    resultWriter.close()
   }
+
+  resultWriter.close()
 }

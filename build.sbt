@@ -38,4 +38,4 @@ ThisBuild / assembly / assemblyMergeStrategy := SparkJobAssemblyMergeStrategy
 
 ThisBuild / libraryDependencies += "org.biodatageeks" %% "sequila"                % SequilaVersion
 ThisBuild / libraryDependencies += "org.apache.spark" %% "spark-sql"              % SequilaSparkVersion
-ThisBuild / libraryDependencies += "me.kosik"         %% "library-spark-test-17"  % s"${SequilaSparkVersion}-1.0.2"   % Test
+ThisBuild / libraryDependencies += "me.kosik"         %% "library-spark-test-17"  % s"${SequilaSparkVersion}-1.0.3"   % Test
