@@ -61,8 +61,15 @@ docker / dockerfile := {
 
     entryPoint(
       "/opt/spark/bin/spark-submit",
-      "--class", "benchmark.sequila.Main",
-      "--master", "spark://spark-master:7077",
+      "--class",                "benchmark.sequila.Main",
+      "--master",               "spark://spark-master:7077",
+      "--deploy-mode",          "client",
+      "--driver-memory",        "4G",
+      "--executor-cores",       "4",
+      "--executor-memory",      "4G",
+      "--total-executor-cores", "40",
+      "--conf",   "spark.eventLog.enabled=true",
+      "--conf",   "spark.eventLog.dir=file:/mnt/spark-events",
       s"/app/benchmark-sequila.jar"
     )
   }

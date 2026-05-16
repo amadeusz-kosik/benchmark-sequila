@@ -45,10 +45,6 @@ services:
       - SPARK_USER=spark
       - SPARK_EVENTLOG_ENABLED=true
       - SPARK_EVENTLOG_DIR=file:/mnt/spark-events
-      - IW_DRIVER_MEMORY=10g
-      - IW_EXECUTOR_MEMORY=4G
-      - IW_EXECUTOR_CORES=4
-      - IW_TOTAL_EXECUTOR_CORES=40
     hostname: spark-driver
     ports:
       - '4040:4040'
