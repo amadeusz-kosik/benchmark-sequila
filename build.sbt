@@ -2,6 +2,7 @@ val DefaultScalacOptions = Seq("-deprecation", "-unchecked", "-Xlint", "-Xdisabl
 
 val ScalaTestVersion = "3.2.20"
 val SequilaVersion = "1.3.6"
+
 // Sequila has support for Spark up to 3.4.3
 val SequilaSparkVersion = "3.4.1"
 
@@ -41,7 +42,7 @@ ThisBuild / assembly / assemblyMergeStrategy := SparkJobAssemblyMergeStrategy
 
 ThisBuild / libraryDependencies += "org.biodatageeks" %% "sequila"                % SequilaVersion
 ThisBuild / libraryDependencies += "org.apache.spark" %% "spark-sql"              % SequilaSparkVersion
-ThisBuild / libraryDependencies += "me.kosik"         %% "library-spark-test-17"  % s"${SequilaSparkVersion}-1.0.3"   % Test
+ThisBuild / libraryDependencies += "org.scalatest"    %% "scalatest"              % ScalaTestVersion      % Test
 
 // sbt-docker configuration
 enablePlugins(DockerPlugin)

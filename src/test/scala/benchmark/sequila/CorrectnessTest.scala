@@ -1,9 +1,9 @@
 package benchmark.sequila
 
-import me.kosik.library.spark.test.WithSparkSession
 import org.apache.spark.sql.SparkSession
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
+import utils.WithSparkSession
 
 
 class CorrectnessTest extends AnyFunSpec with Matchers with WithSparkSession {
